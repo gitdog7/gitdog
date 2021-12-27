@@ -6,7 +6,7 @@ import (
 
 func Test_GitHubClient(t *testing.T) {
 
-	client := NewGitHubClient("kubesphere", "console", "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")
+	client := NewGitHubClient("kubesphere", "console", "")
 
 	contributors, _ := client.FetchContributors()
 	for _, c := range contributors {

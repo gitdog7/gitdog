@@ -1,6 +1,7 @@
 # GitDog 
 
 [![Go](https://github.com/live77/gitdog/actions/workflows/go.yml/badge.svg)](https://github.com/live77/gitdog/actions/workflows/go.yml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Get in-depth analysis reports of a GitHub repository.
 
