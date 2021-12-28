@@ -1,4 +1,4 @@
-module github.com/live77/gitdog
+module github.com/gitdog7/gitdog
 
 go 1.17
 
