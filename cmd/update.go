@@ -16,10 +16,10 @@ limitations under the License.
 package cmd
 
 import (
+	client2 "github.com/gitdog7/gitdog/pkg/client"
+	"github.com/gitdog7/gitdog/pkg/config"
+	"github.com/gitdog7/gitdog/pkg/repo"
 	log "github.com/google/logger"
-	client2 "github.com/live77/gitdog/pkg/client"
-	"github.com/live77/gitdog/pkg/config"
-	"github.com/live77/gitdog/pkg/repo"
 	"github.com/spf13/cobra"
 	"os"
 )

@@ -16,10 +16,10 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/live77/gitdog/pkg/config"
-	"github.com/live77/gitdog/pkg/repo"
-	"github.com/live77/gitdog/pkg/visualize/contributor"
-	"github.com/live77/gitdog/pkg/visualize/painter"
+	"github.com/gitdog7/gitdog/pkg/config"
+	"github.com/gitdog7/gitdog/pkg/repo"
+	"github.com/gitdog7/gitdog/pkg/visualize/contributor"
+	"github.com/gitdog7/gitdog/pkg/visualize/painter"
 	"github.com/spf13/cobra"
 	"os"
 	"strings"
