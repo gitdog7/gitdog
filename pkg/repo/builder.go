@@ -1,7 +1,7 @@
 package repo
 
 import (
-	"github.com/live77/gitdog/pkg/client"
+	"github.com/gitdog7/gitdog/pkg/client"
 	"log"
 )
 
