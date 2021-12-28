@@ -55,8 +55,10 @@ var genContributeGraphCmd = &cobra.Command{
 		// visualize
 		viz := contributor.ContributeGraphViz{
 			Repo: repository,
+			TopK: 100,
 		}
-		// generate graph
+
+		// generate contributor graph
 		graph := viz.GenerateGraph()
 		outputPath := workdir + "/" + strings.Replace(graph.Title.Title, " ", "_", -1) + ".html"
 		painter.PaintGraph(graph, outputPath)

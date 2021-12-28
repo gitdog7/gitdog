@@ -14,6 +14,9 @@ import (
 // the edge represent the follow relationship in those contributors
 type ContributeGraphViz struct {
 	Repo *repo.GitHubRepo
+
+	// TopK only draw top k contributors, 0 means all
+	TopK int
 }
 
 func (v *ContributeGraphViz) GenerateGraph() *charts.Graph {
@@ -44,6 +47,12 @@ func (v *ContributeGraphViz) genNodes() []opts.GraphNode {
 	sort.Slice(nodes, func(i, j int) bool {
 		return nodes[i].Value > nodes[j].Value
 	})
+
+	// keep only topk contributors
+	if v.TopK > 0 && len(nodes) > v.TopK {
+		nodes = nodes[0:v.TopK]
+	}
+
 	return nodes
 }
 
@@ -87,10 +96,10 @@ func (v *ContributeGraphViz) genCircleGraph(repo *repo.GitHubRepo) *charts.Graph
 	graph := charts.NewGraph()
 	graph.SetGlobalOptions(
 		charts.WithTitleOpts(opts.Title{
-			Title: "Contributors and Following Relationships",
-			Subtitle: repo.Owner + "/" + repo.Repository + "\n" +
-				"node name format: contributor(#contributions)\n" +
-				"edge A->B means A follows B in GitHub",
+			Title: repo.Owner + " | " + repo.Repository,
+			Subtitle: fmt.Sprintf("Top %v Contributors and Following Relationships\n", v.TopK) +
+				"Node name: contributor(#contributions)\n" +
+				"Edge A->B: A follows B in GitHub",
 		}),
 		charts.WithLegendOpts(opts.Legend{
 			Show: true,
