@@ -34,4 +34,4 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
-replace github.com/go-echarts/go-echarts/v2 => github.com/live77/go-echarts/v2 v2.2.5-0.20211216155601-6b9a4f5889dd
+replace github.com/go-echarts/go-echarts/v2 => github.com/gitdog7/go-echarts/v2 v2.2.5-0.20211216155601-6b9a4f5889dd
