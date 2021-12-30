@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"github.com/gitdog7/gitdog/src/cmd/subcmd"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +14,7 @@ var allinoneCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		initCmd.Run(cmd, args)
 		updateCmd.Run(cmd, args)
-		genContributeGraphCmd.Run(cmd, args)
+		subcmd.GenContributeGraphCmd.Run(cmd, args)
 	},
 }
 
