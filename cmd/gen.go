@@ -1,18 +1,4 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+// Package cmd /*
 package cmd
 
 import (
@@ -33,34 +19,22 @@ var genContributeGraphCmd = &cobra.Command{
 	Short: "generate contribute graph",
 	Long:  `generate contribute graph`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// parse flags
-		workdir, _ := cmd.Flags().GetString("workdir")
-
-		// check working directory exists
-		if _, err := os.Stat(workdir); os.IsNotExist(err) {
-			// path exists
-			log.Fatalf("working directory: %v doesn't exists.", workdir)
-		}
-
-		// load config file
-		configFileName := workdir + "/" + config.ConfigFileName
-		config := config.Load(configFileName)
-		if config == nil {
-			log.Fatalf("failed to load config file in %v", configFileName)
-		}
-
-		// load data
-		repository := repo.Load(workdir + "/" + repo.RepoDataFileName)
+		// load repository
+		repository := loadRepository(cmd)
 
 		// visualize
 		viz := contributor.ContributeGraphViz{
 			Repo: repository,
 			TopK: 100,
+			Type: "circular",
 		}
 
 		// generate contributor graph
 		graph := viz.GenerateGraph()
-		outputPath := workdir + "/" + strings.Replace(graph.Title.Title, " ", "_", -1) + ".html"
+		workdir, _ := cmd.Flags().GetString("workdir")
+		outputPath := workdir + "/" +
+			strings.Replace(strings.Replace(graph.Title.Title, " ", "_", -1),
+				"/", "|", -1) + ".html"
 		painter.PaintGraph(graph, outputPath)
 		log.Infof("contribute graph: %v generated successfully.", outputPath)
 
@@ -79,17 +53,33 @@ var genCmd = &cobra.Command{
 	},
 }
 
+// corba cmd init
 func init() {
 	genCmd.AddCommand(genContributeGraphCmd)
 	rootCmd.AddCommand(genCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	genCmd.PersistentFlags().StringP("workdir", "w", "", "working directory")
+}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// genCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+// loadRepository
+func loadRepository(cmd *cobra.Command) *repo.GitHubRepo {
+	// parse flags
+	workdir, _ := cmd.Flags().GetString("workdir")
+
+	// check working directory exists
+	if _, err := os.Stat(workdir); os.IsNotExist(err) {
+		// path exists
+		log.Fatalf("working directory: %v doesn't exists.", workdir)
+	}
+
+	// load config file
+	configFileName := workdir + "/" + config.ConfigFileName
+	config := config.Load(configFileName)
+	if config == nil {
+		log.Fatalf("failed to load config file in %v", configFileName)
+	}
+
+	// load data
+	repository := repo.Load(workdir + "/" + repo.RepoDataFileName)
+	return repository
 }

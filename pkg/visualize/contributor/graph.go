@@ -17,10 +17,13 @@ type ContributeGraphViz struct {
 
 	// TopK only draw top k contributors, 0 means all
 	TopK int
+
+	// Type generate graph type, "circular", or "force"
+	Type string
 }
 
 func (v *ContributeGraphViz) GenerateGraph() *charts.Graph {
-	return v.genCircleGraph(v.Repo)
+	return v.genGraph(v.Repo)
 }
 
 ////////////////////////////////////////////
@@ -92,11 +95,11 @@ const MemberID = 0
 const ContributorID = 1
 
 // genCircleGraph draw circular graph
-func (v *ContributeGraphViz) genCircleGraph(repo *repo.GitHubRepo) *charts.Graph {
+func (v *ContributeGraphViz) genGraph(repo *repo.GitHubRepo) *charts.Graph {
 	graph := charts.NewGraph()
 	graph.SetGlobalOptions(
 		charts.WithTitleOpts(opts.Title{
-			Title: repo.Owner + " | " + repo.Repository,
+			Title: repo.Owner + "/" + repo.Repository + " Contributors Graph(" + v.Type + ")",
 			Subtitle: fmt.Sprintf("Top %v Contributors and Following Relationships\n", v.TopK) +
 				"Node name: contributor(#contributions)\n" +
 				"Edge A->B: A follows B in GitHub",
@@ -127,7 +130,7 @@ func (v *ContributeGraphViz) genCircleGraph(repo *repo.GitHubRepo) *charts.Graph
 						EdgeLength: 0,
 					},
 					FocusNodeAdjacency: true,
-					Layout:             "circular",
+					Layout:             v.Type,
 					Roam:               true,
 					Draggable:          true,
 					Categories:         v.generateCategories(),
