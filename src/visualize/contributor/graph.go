@@ -2,7 +2,7 @@ package contributor
 
 import (
 	"fmt"
-	"github.com/gitdog7/gitdog/pkg/repo"
+	"github.com/gitdog7/gitdog/src/repo"
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
 	"math"
@@ -12,9 +12,8 @@ import (
 // ContributeGraphViz is a visualizer, given a GitHubRepo data.
 // it will output a circular graph, the nodes in the graph represent the contributors
 // the edge represent the follow relationship in those contributors
-type ContributeGraphViz struct {
-	Repo *repo.GitHubRepo
 
+type ContributeGraphOption struct {
 	// TopK only draw top k contributors, 0 means all
 	TopK int
 
@@ -22,8 +21,8 @@ type ContributeGraphViz struct {
 	Type string
 }
 
-func (v *ContributeGraphViz) GenerateGraph() *charts.Graph {
-	return v.genGraph(v.Repo)
+func GenerateGraph(repo *repo.GitHubRepo, option ContributeGraphOption) *charts.Graph {
+	return genGraph(repo, option)
 }
 
 ////////////////////////////////////////////
@@ -32,10 +31,10 @@ func (v *ContributeGraphViz) GenerateGraph() *charts.Graph {
 
 // genNodes for each contributor in the repo, generate a node to represent.
 // the more contributions of this contributor, the larger node symbolSize
-func (v *ContributeGraphViz) genNodes() []opts.GraphNode {
+func genNodes(repo *repo.GitHubRepo, option ContributeGraphOption) []opts.GraphNode {
 	nodes := make([]opts.GraphNode, 0)
-	for _, c := range v.Repo.Contributors {
-		_, isMember := v.Repo.Members[*c.Login]
+	for _, c := range repo.Contributors {
+		_, isMember := repo.Members[*c.Login]
 		category := ContributorID
 		if isMember {
 			category = MemberID
@@ -52,8 +51,8 @@ func (v *ContributeGraphViz) genNodes() []opts.GraphNode {
 	})
 
 	// keep only topk contributors
-	if v.TopK > 0 && len(nodes) > v.TopK {
-		nodes = nodes[0:v.TopK]
+	if option.TopK > 0 && len(nodes) > option.TopK {
+		nodes = nodes[0:option.TopK]
 	}
 
 	return nodes
@@ -61,12 +60,12 @@ func (v *ContributeGraphViz) genNodes() []opts.GraphNode {
 
 // genLinks generate follower edge for two contributors
 // generate a direct link from A->B if A follows B in GitHub
-func (v *ContributeGraphViz) genLinks() []opts.GraphLink {
+func genLinks(repo *repo.GitHubRepo, option ContributeGraphOption) []opts.GraphLink {
 	links := make([]opts.GraphLink, 0)
-	for user1, followers := range v.Repo.Followers {
+	for user1, followers := range repo.Followers {
 		for _, user2 := range followers {
-			if c1, f1 := v.Repo.Contributors[user1]; f1 {
-				if c2, f2 := v.Repo.Contributors[user2]; f2 {
+			if c1, f1 := repo.Contributors[user1]; f1 {
+				if c2, f2 := repo.Contributors[user2]; f2 {
 					links = append(links, opts.GraphLink{
 						Source: fmt.Sprintf("%v(%v)", *c2.Login, *c2.Contributions),
 						Target: fmt.Sprintf("%v(%v)", *c1.Login, *c1.Contributions),
@@ -80,7 +79,7 @@ func (v *ContributeGraphViz) genLinks() []opts.GraphLink {
 }
 
 // generateCategories categories is member or contributor
-func (v *ContributeGraphViz) generateCategories() []*opts.GraphCategory {
+func generateCategories() []*opts.GraphCategory {
 	return []*opts.GraphCategory{
 		{
 			Name: "Member",
@@ -91,16 +90,34 @@ func (v *ContributeGraphViz) generateCategories() []*opts.GraphCategory {
 	}
 }
 
+func getForceOption(option ContributeGraphOption) *opts.GraphForce {
+	if option.Type == "circular" {
+		return &opts.GraphForce{
+			InitLayout: "circular",
+			Repulsion:  0,
+			Gravity:    0,
+			EdgeLength: 0,
+		}
+	} else {
+		return &opts.GraphForce{
+			InitLayout: "force",
+			Repulsion:  100,
+			Gravity:    0,
+			EdgeLength: 100,
+		}
+	}
+}
+
 const MemberID = 0
 const ContributorID = 1
 
 // genCircleGraph draw circular graph
-func (v *ContributeGraphViz) genGraph(repo *repo.GitHubRepo) *charts.Graph {
+func genGraph(repo *repo.GitHubRepo, option ContributeGraphOption) *charts.Graph {
 	graph := charts.NewGraph()
 	graph.SetGlobalOptions(
 		charts.WithTitleOpts(opts.Title{
-			Title: repo.Owner + "/" + repo.Repository + " Contributors Graph(" + v.Type + ")",
-			Subtitle: fmt.Sprintf("Top %v Contributors and Following Relationships\n", v.TopK) +
+			Title: repo.Owner + "/" + repo.Repository + " Contributors Graph(" + option.Type + ")",
+			Subtitle: fmt.Sprintf("Top %v Contributors and Following Relationships\n", option.TopK) +
 				"Node name: contributor(#contributions)\n" +
 				"Edge A->B: A follows B in GitHub",
 		}),
@@ -118,22 +135,17 @@ func (v *ContributeGraphViz) genGraph(repo *repo.GitHubRepo) *charts.Graph {
 	)
 
 	graph.AddSeries("contributors",
-		v.genNodes(),
-		v.genLinks()).
+		genNodes(repo, option),
+		genLinks(repo, option)).
 		SetSeriesOptions(
 			charts.WithGraphChartOpts(
 				opts.GraphChart{
-					Force: &opts.GraphForce{
-						InitLayout: "circular",
-						Repulsion:  0,
-						Gravity:    0,
-						EdgeLength: 0,
-					},
+					Force:              getForceOption(option),
 					FocusNodeAdjacency: true,
-					Layout:             v.Type,
+					Layout:             option.Type,
 					Roam:               true,
 					Draggable:          true,
-					Categories:         v.generateCategories(),
+					Categories:         generateCategories(),
 					EdgeSymbol:         []string{"circle", "arrow"},
 					EdgeSymbolSize:     []int{0, 10},
 				}),

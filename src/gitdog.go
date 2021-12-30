@@ -16,7 +16,7 @@ limitations under the License.
 package main
 
 import (
-	"github.com/gitdog7/gitdog/cmd"
+	"github.com/gitdog7/gitdog/src/cmd"
 	"github.com/google/logger"
 	"io/ioutil"
 )
