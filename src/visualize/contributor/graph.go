@@ -140,7 +140,7 @@ func genGraph(repo *repo.GitHubRepo, option ContributeGraphOption) *charts.Graph
 		SetSeriesOptions(
 			charts.WithGraphChartOpts(
 				opts.GraphChart{
-					Force: getForceOption(option),
+					Force:              getForceOption(option),
 					FocusNodeAdjacency: true,
 					Layout:             option.Type,
 					Roam:               true,
