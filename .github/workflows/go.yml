@@ -21,7 +21,7 @@ jobs:
     - name: Go Fmt
       uses: Jerome1337/gofmt-action@v1.0.4
       with:
-        gofmt-path: './src'
+        gofmt-path: './'
         gofmt-flags: '-l -d'
 
     - name: Build
