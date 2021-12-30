@@ -2,7 +2,7 @@ package contributor
 
 import (
 	"fmt"
-	"github.com/gitdog7/gitdog/pkg/repo"
+	"github.com/gitdog7/gitdog/src/repo"
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
 	"math"

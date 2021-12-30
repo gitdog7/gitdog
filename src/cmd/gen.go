@@ -2,10 +2,10 @@
 package cmd
 
 import (
-	"github.com/gitdog7/gitdog/pkg/config"
-	"github.com/gitdog7/gitdog/pkg/repo"
-	"github.com/gitdog7/gitdog/pkg/visualize/contributor"
-	"github.com/gitdog7/gitdog/pkg/visualize/painter"
+	"github.com/gitdog7/gitdog/src/config"
+	"github.com/gitdog7/gitdog/src/repo"
+	"github.com/gitdog7/gitdog/src/visualize/contributor"
+	"github.com/gitdog7/gitdog/src/visualize/painter"
 	"github.com/spf13/cobra"
 	"os"
 	"strings"
