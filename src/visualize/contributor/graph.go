@@ -9,10 +9,7 @@ import (
 	"sort"
 )
 
-// ContributeGraphViz is a visualizer, given a GitHubRepo data.
-// it will output a circular graph, the nodes in the graph represent the contributors
-// the edge represent the follow relationship in those contributors
-
+// ContributeGraphOption graph options.
 type ContributeGraphOption struct {
 	// TopK only draw top k contributors, 0 means all
 	TopK int
@@ -21,6 +18,7 @@ type ContributeGraphOption struct {
 	Type string
 }
 
+// GenerateGraph generate a graph, given github repo and option
 func GenerateGraph(repo *repo.GitHubRepo, option ContributeGraphOption) *charts.Graph {
 	return genGraph(repo, option)
 }
@@ -41,7 +39,7 @@ func genNodes(repo *repo.GitHubRepo, option ContributeGraphOption) []opts.GraphN
 		}
 		nodes = append(nodes, opts.GraphNode{
 			Name:       fmt.Sprintf("%v(%v)", *c.Login, *c.Contributions),
-			SymbolSize: 15*math.Log10(float64(*c.Contributions)) + 10,
+			SymbolSize: getNodeSymbolSizeFactor(len(repo.Contributors))*math.Log10(float64(*c.Contributions)) + 10,
 			Value:      float32(*c.Contributions)/100.0 + 10,
 			Category:   category,
 		})
@@ -58,6 +56,14 @@ func genNodes(repo *repo.GitHubRepo, option ContributeGraphOption) []opts.GraphN
 	return nodes
 }
 
+func getNodeSymbolSizeFactor(num int) float64 {
+	if num >= 100 {
+		return 10.0
+	} else {
+		return 20.0 - float64(num)/100.0*10.0
+	}
+}
+
 // genLinks generate follower edge for two contributors
 // generate a direct link from A->B if A follows B in GitHub
 func genLinks(repo *repo.GitHubRepo, option ContributeGraphOption) []opts.GraphLink {
@@ -67,8 +73,10 @@ func genLinks(repo *repo.GitHubRepo, option ContributeGraphOption) []opts.GraphL
 			if c1, f1 := repo.Contributors[user1]; f1 {
 				if c2, f2 := repo.Contributors[user2]; f2 {
 					links = append(links, opts.GraphLink{
+						// c2 follows c1
 						Source: fmt.Sprintf("%v(%v)", *c2.Login, *c2.Contributions),
 						Target: fmt.Sprintf("%v(%v)", *c1.Login, *c1.Contributions),
+						Value:  float32(*c1.Contributions),
 					})
 				}
 			}
@@ -102,8 +110,8 @@ func getForceOption(option ContributeGraphOption) *opts.GraphForce {
 		return &opts.GraphForce{
 			InitLayout: "force",
 			Repulsion:  100,
-			Gravity:    0,
-			EdgeLength: 100,
+			Gravity:    0.1,
+			EdgeLength: 150,
 		}
 	}
 }
