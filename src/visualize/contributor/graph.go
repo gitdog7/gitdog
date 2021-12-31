@@ -129,7 +129,7 @@ func getEdgeLineOption(option ContributeGraphOption) opts.LineStyle {
 		}
 	} else {
 		return opts.LineStyle{
-			Color: "target",
+			Color:     "target",
 			Curveness: 0.3,
 			Width:     1.1,
 			Opacity:   1.0,
