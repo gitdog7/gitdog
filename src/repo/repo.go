@@ -3,8 +3,8 @@ package repo
 import (
 	"encoding/json"
 	"github.com/google/go-github/github"
+	log "github.com/google/logger"
 	"io/ioutil"
-	"log"
 )
 
 // GitHubRepo Contains all the data we need to analysis a given repository.
@@ -23,6 +23,9 @@ type GitHubRepo struct {
 
 	// Members, Login -> user info
 	Members map[string]*github.User
+
+	// Issues github issues(all type)
+	Issues []*github.Issue
 }
 
 const RepoDataFileName string = "gitdog_data.json"
@@ -87,13 +90,15 @@ func (r *GitHubRepo) Save(filePath string) {
 func Load(filePath string) *GitHubRepo {
 	file, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		log.Fatalf("Failed to read data from file: %v", filePath)
+		log.Errorf("Failed to read data from file: %v", filePath)
+		return nil
 	}
 
 	data := GitHubRepo{}
 	err = json.Unmarshal([]byte(file), &data)
 	if err != nil {
-		log.Fatal("Failed to convert json to GitHubRepo")
+		log.Errorf("Failed to convert json to GitHubRepo")
+		return nil
 	}
 
 	return &data

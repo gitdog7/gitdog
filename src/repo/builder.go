@@ -7,6 +7,12 @@ import (
 
 func BuildGitHubRepo(client *client.GitHubClient) *GitHubRepo {
 	repo := &GitHubRepo{Owner: client.Owner, Repository: client.Repository}
+	repo.UpdateRepo(client)
+	return repo
+}
+
+// update repo
+func (repo *GitHubRepo) UpdateRepo(client *client.GitHubClient) error {
 
 	// fetch contributors
 	contributors, err := client.FetchContributors()
@@ -33,5 +39,17 @@ func BuildGitHubRepo(client *client.GitHubClient) *GitHubRepo {
 	log.Printf("total %v members.", len(members))
 	log.Printf("total %v following relationships.", followingCnt)
 
-	return repo
+	// fetch issues
+	issues, err := client.FetchIssues()
+	if err != nil {
+		return err
+	}
+
+	repo.Issues = issues
+
+	//for _, issue := range issues {
+	//	log.Printf("%v %v %v", *issue.User, *issue.ClosedAt, issue.IsPullRequest())
+	//}
+
+	return nil
 }

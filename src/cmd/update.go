@@ -59,8 +59,19 @@ var updateCmd = &cobra.Command{
 			log.Fatalf("github client is not ready.")
 		}
 
-		// begin to update data
-		repository := repo.BuildGitHubRepo(client)
+		// repo path
+		repoPath := workdir + "/" + repo.RepoDataFileName
+
+		// try to load repository
+		var repository *repo.GitHubRepo = nil
+		if repository = repo.Load(repoPath); repository != nil {
+			// update repo data
+			repository.UpdateRepo(client)
+		} else {
+			// begin to build repo
+			repository = repo.BuildGitHubRepo(client)
+		}
+
 		repository.Save(workdir + "/" + repo.RepoDataFileName)
 	},
 }
