@@ -1,6 +1,6 @@
 # GitDog 
 
-[![Go](https://github.com/live77/gitdog/actions/workflows/go.yml/badge.svg)](https://github.com/live77/gitdog/actions/workflows/go.yml)
+[![Go](https://github.com/gitdog7/gitdog/actions/workflows/go.yml/badge.svg)](https://github.com/gitdog7/gitdog/actions/workflows/go.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CodeQL](https://github.com/gitdog7/gitdog/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/gitdog7/gitdog/actions/workflows/codeql-analysis.yml)
 
