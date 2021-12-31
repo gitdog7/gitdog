@@ -77,6 +77,9 @@ func genLinks(repo *repo.GitHubRepo, option ContributeGraphOption) []opts.GraphL
 						Source: fmt.Sprintf("%v(%v)", *c2.Login, *c2.Contributions),
 						Target: fmt.Sprintf("%v(%v)", *c1.Login, *c1.Contributions),
 						Value:  float32(*c1.Contributions),
+						Label: &opts.EdgeLabel{
+							Show: false,
+						},
 					})
 				}
 			}
@@ -112,6 +115,24 @@ func getForceOption(option ContributeGraphOption) *opts.GraphForce {
 			Repulsion:  100,
 			Gravity:    0.1,
 			EdgeLength: 150,
+		}
+	}
+}
+
+func getEdgeLineOption(option ContributeGraphOption) opts.LineStyle {
+	if option.Type == "circular" {
+		return opts.LineStyle{
+			Color:     "target",
+			Curveness: 0.3,
+			Width:     1.1,
+			Opacity:   1.0,
+		}
+	} else {
+		return opts.LineStyle{
+			Color: "target",
+			Curveness: 0.3,
+			Width:     1.1,
+			Opacity:   1.0,
 		}
 	}
 }
@@ -178,12 +199,7 @@ func genGraph(repo *repo.GitHubRepo, option ContributeGraphOption) *charts.Graph
 			charts.WithCircularStyleOpts(opts.CircularStyle{
 				RotateLabel: true,
 			}),
-			charts.WithLineStyleOpts(opts.LineStyle{
-				Color:     "target",
-				Curveness: 0.3,
-				Width:     1.1,
-				Opacity:   1.0,
-			}),
+			charts.WithLineStyleOpts(getEdgeLineOption(option)),
 		)
 
 	return graph
