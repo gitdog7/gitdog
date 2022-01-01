@@ -8,9 +8,9 @@ Get in-depth analysis reports of a GitHub repository.
 
 # Examples
 
-[rancher/rancher's Contributors Graph(force layout)](https://gitdog7.github.io/gitdog/examples/rancher/rancher/rancher_rancher_Contributors_Graph_force_.html)
-
 [rancher/rancher's Contributors Graph(circular layout)](https://gitdog7.github.io/gitdog/examples/rancher/rancher/rancher_rancher_Contributors_Graph_circular_.html)
+
+[rancher/rancher's Contributors Graph(force layout)](https://gitdog7.github.io/gitdog/examples/rancher/rancher/rancher_rancher_Contributors_Graph_force_.html)
 
 <table>
   <tr>
@@ -20,8 +20,8 @@ Get in-depth analysis reports of a GitHub repository.
       </td>
   </tr>
   <tr>
-     <td><img src="docs/images/console.png"/></td>
-     <td><img src="docs/images/project.png"/></td>
+     <td><img src="example/rancher_example1.png"/></td>
+     <td><img src="example/rancher_example2.png"/></td>
   </tr>
 </table>
 
