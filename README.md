@@ -8,10 +8,22 @@ Get in-depth analysis reports of a GitHub repository.
 
 # Examples
 
-[rancher/rancher Contributors Graph1](https://gitdog7.github.io/gitdog/examples/rancher/rancher/rancher_rancher_Contributors_Graph_force_.html)
-[rancher/rancher Contributors Graph2](https://gitdog7.github.io/gitdog/examples/rancher/rancher/rancher_rancher_Contributors_Graph_circular_.html)
+[rancher/rancher's Contributors Graph(force layout)](https://gitdog7.github.io/gitdog/examples/rancher/rancher/rancher_rancher_Contributors_Graph_force_.html)
 
-<img width="1024" alt="截屏2021-12-25 下午11 22 17" src="https://user-images.githubusercontent.com/51254187/147388217-bc92a8c0-b374-4aaa-9e46-a389ec7ee2fc.png">
+[rancher/rancher's Contributors Graph(circular layout)](https://gitdog7.github.io/gitdog/examples/rancher/rancher/rancher_rancher_Contributors_Graph_circular_.html)
+
+<table>
+  <tr>
+      <td width="50%" align="center">
+      </td>
+      <td width="50%" align="center">
+      </td>
+  </tr>
+  <tr>
+     <td><img src="docs/images/console.png"/></td>
+     <td><img src="docs/images/project.png"/></td>
+  </tr>
+</table>
 
 # Quick Start
 
